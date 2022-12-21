@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Абоненты_ТерещенокModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Абоненты">
+    <Key>
+      <PropertyRef Name="ID_Абонента" />
+    </Key>
+    <Property Name="ID_Абонента" Type="Int32" Nullable="false" />
+    <Property Name="ФИО_Абонента" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Адрес_Абонента" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Номера_телефоннов_абонентов" Relationship="Self.FK_Номера_телефоннов_абонентов_Абоненты" FromRole="Абоненты" ToRole="Номера_телефоннов_абонентов" />
+  </EntityType>
+  <EntityType Name="Номера_телефоннов_абонентов">
+    <Key>
+      <PropertyRef Name="ID_Номера_телефона" />
+    </Key>
+    <Property Name="ID_Номера_телефона" Type="Int32" Nullable="false" />
+    <Property Name="ID_Абонента" Type="Int32" Nullable="false" />
+    <Property Name="Номер_телефона" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Номер_договора" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Дата_установки" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Абоненты" Relationship="Self.FK_Номера_телефоннов_абонентов_Абоненты" FromRole="Номера_телефоннов_абонентов" ToRole="Абоненты" />
+    <NavigationProperty Name="Тарифы" Relationship="Абоненты_ТерещенокModel.FK_Номера_телефоннов_абонентов_Абоненты" FromRole="Номера_телефоннов_абонентов" ToRole="Абоненты" />
+  </EntityType>
+  <EntityType Name="Тарифы">
+    <Key>
+      <PropertyRef Name="ID_Тарифа" />
+    </Key>
+    <Property Name="ID_Тарифа" Type="Int32" Nullable="false" />
+    <Property Name="Код_города" Type="Int32" Nullable="false" />
+    <Property Name="Город" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Тариф_за_1_мин" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Номера_телефоннов_клиентов" />
+  </EntityType>
+  <EntityType Name="Телефонные_разговоры">
+    <Key>
+      <PropertyRef Name="ID_Телефонного_разговора" />
+      <PropertyRef Name="ID_Номера_телефона" />
+      <PropertyRef Name="ID_Тарифа" />
+      <PropertyRef Name="Дата_разговора" />
+      <PropertyRef Name="Продолжительность" />
+      <PropertyRef Name="Код_города" />
+      <PropertyRef Name="Город" />
+      <PropertyRef Name="Оплата" />
+    </Key>
+    <Property Name="ID_Телефонного_разговора" Type="Int32" Nullable="false" />
+    <Property Name="ID_Номера_телефона" Type="Int32" Nullable="false" />
+    <Property Name="ID_Тарифа" Type="Int32" Nullable="false" />
+    <Property Name="Дата_разговора" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Продолжительность" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Код_города" Type="Int32" Nullable="false" />
+    <Property Name="Город" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Оплата" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Номера_телефоннов_абонентов_Абоненты">
+    <End Role="Абоненты" Type="Self.Абоненты" Multiplicity="1" />
+    <End Role="Номера_телефоннов_абонентов" Type="Self.Номера_телефоннов_абонентов" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Абоненты">
+        <PropertyRef Name="ID_Абонента" />
+      </Principal>
+      <Dependent Role="Номера_телефоннов_абонентов">
+        <PropertyRef Name="ID_Абонента" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Абоненты_ТерещенокEntities2" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="Абоненты" EntityType="Self.Абоненты" />
+    <EntitySet Name="Номера_телефоннов_абонентов" EntityType="Self.Номера_телефоннов_абонентов" />
+    <EntitySet Name="Тарифы" EntityType="Self.Тарифы" />
+    <EntitySet Name="Телефонные_разговоры" EntityType="Self.Телефонные_разговоры" />
+    <AssociationSet Name="FK_Номера_телефоннов_абонентов_Абоненты" Association="Self.FK_Номера_телефоннов_абонентов_Абоненты">
+      <End Role="Абоненты" EntitySet="Абоненты" />
+      <End Role="Номера_телефоннов_абонентов" EntitySet="Номера_телефоннов_абонентов" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
